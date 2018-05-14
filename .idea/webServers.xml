@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="42d50b04-1050-4b4b-8bf5-0b6ae0350400" name="aliyun" url="https://xdyy.shmtu.edu.cn">
+        <fileTransfer host="101.132.115.221" port="22" rootFolder="/home/singee" accessType="SFTP">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+      <webServer id="057af9c8-581a-4ea7-91da-5977168acf98" name="root@aliyun" url="https:///xdyy.shmtu.edu.cn">
+        <fileTransfer host="101.132.115.221" port="22" rootFolder="/root" accessType="SFTP">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

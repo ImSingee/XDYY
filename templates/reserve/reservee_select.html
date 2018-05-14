@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block head %}
+    {% load static from staticfiles %}
+    <link href="{% static 'css/plugins/iCheck/custom.css' %}" rel="stylesheet">
+{% endblock head %}
+{% block content %}
+    <div class="ibox float-e-margins col-sm-12">
+        <div class="ibox-title">
+            <h5>新预约
+                <small>请选择预约对象</small>
+            </h5>
+        </div>
+        <div class="ibox-content">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="row box">
+                        {% if reservee %}
+                            {% for r in reservee %}
+                                <div class="col-xs-6 col-sm-4 item">
+                                    <div class="contact-box">
+                                        <form method="post" id="reservee_{{ r.id }}">
+                                            <input type="hidden" name="reservee" value="{{ r.id }}">
+                                            {% csrf_token %}
+                                            <a onclick="document.getElementById('reservee_{{ r.id }}').submit();">
+                                                <div class="col-sm-4">
+                                                    <div class="text-center">
+                                                        <img alt="image" class="img-circle m-t-xs img-responsive"
+                                                             src="/media/{{ r.avatar }}"
+                                                             style="width: 80px; margin: auto;">
+                                                        <div class="m-t-xs font-bold">{{ r.userinfo.short_intro|linebreaks }}</div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-8">
+                                                    <h3 class="text-center"><strong>{{ r.name }}</strong><br>
+                                                        <small>{{ r.userinfo.reservee_rank_average_msg }}</small></h3>
+                                                    <div class="hidden-xs">
+                                                        {% if r.userinfo.default_address %}
+                                                            <p>
+                                                                <i class="fa fa-map-marker"></i> {{ r.userinfo.default_address }}
+                                                            </p>{% endif %}
+                                                        {#                                            <address>#}
+                                                        {#                                                <strong>Baidu, Inc.</strong><br>#}
+                                                        {#                                                E-mail:xxx@baidu.com<br>#}
+                                                        {#                                                Weibo:<a href="">http://weibo.com/xxx</a><br>#}
+                                                        {#                                                <abbr title="Phone">Tel:</abbr> (123) 456-7890#}
+                                                        {#                                            </address>#}
+                                                        {{ r.userinfo.intro|linebreaks }}
+                                                    </div>
+                                                </div>
+                                                <div class="clearfix"></div>
+                                            </a>
+                                        </form>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            很抱歉，暂时没有符合您条件的可预约对象
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+{% block js %}
+    <script src="{% static 'js/masonry.pkgd.min.js' %}"></script>
+    <script src="{% static 'js/imagesloaded.pkgd.min.js' %}"></script>
+    <script>
+
+        var box = $('.box');
+
+        box.masonry(
+            {
+                itemSelector: '.item'
+            }
+        );
+
+        imagesLoaded(box, function () {
+            box.masonry(
+                {
+                    itemSelector: '.item'
+                }
+            );
+        })
+
+    </script>
+{% endblock js %}

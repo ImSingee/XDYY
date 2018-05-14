@@ -1,0 +1,162 @@
+[
+  {
+    "name": "新预约",
+    "icon_name": "plus",
+    "pattern": "reserve:user_auth",
+    "order": 0,
+    "auth": null,
+    "children": []
+  },
+  {
+    "name": "我的预约",
+    "icon_name": "thumb-tack",
+    "pattern": "",
+    "order": 2,
+    "auth": null,
+    "children": [
+      {
+        "name": "正在进行",
+        "icon_name": "",
+        "pattern": "reserve:my_reserve;type=ing",
+        "order": 1,
+        "auth": null,
+        "children": []
+      },
+      {
+        "name": "已完成",
+        "icon_name": "",
+        "pattern": "reserve:my_reserve;type=ed",
+        "order": 2,
+        "auth": null,
+        "children": []
+      }
+    ]
+  },
+  {
+    "name": "预约管理",
+    "icon_name": "cog",
+    "pattern": "",
+    "order": 3,
+    "auth": null,
+    "children": [
+      {
+        "name": "等待确认",
+        "pattern": "reserve:reserve_me;type=submited",
+        "order": 0,
+        "auth": null,
+        "children": []
+      },
+      {
+        "name": "已确认",
+        "pattern": "reserve:reserve_me;type=confirmed",
+        "order": 1,
+        "auth": null,
+        "children": []
+      },
+
+      {
+        "name": "已完成",
+        "pattern": "reserve:reserve_me;type=completed",
+        "order": 2,
+        "auth": null,
+        "children": []
+      },
+      {
+        "name": "已取消",
+        "pattern": "reserve:reserve_me;type=canceled",
+        "order": 3,
+        "auth": null,
+        "children": []
+      },
+      {
+        "name": "预约设置",
+        "icon_name": "",
+        "pattern": "reserve:reservee_settings",
+        "order": 11,
+        "auth": null,
+        "children": []
+      },
+      {
+        "name": "可预约时间设置",
+        "icon_name": "",
+        "pattern": "",
+        "order": 12,
+        "auth": null,
+        "children": []
+      },
+      {
+        "name": "重复预约时间设置",
+        "icon_name": "",
+        "pattern": "",
+        "order": 13,
+        "auth": null,
+        "children": []
+      }
+    ]
+  },
+  {
+    "name": "系统设置",
+    "icon_name": "cog",
+    "pattern": "",
+    "order": 4,
+    "auth": null,
+    "children": [
+      {
+        "name": "管理后台",
+        "icon_name": "cog",
+        "pattern": "admin:index",
+        "order": 0,
+        "auth": null,
+        "children": []
+      },
+      {
+        "name": "全局设置",
+        "icon_name": "",
+        "pattern": "admin:main_global_changelist",
+        "order": 1,
+        "auth": null,
+        "children": []
+      },
+      {
+        "name": "菜单设置",
+        "icon_name": "",
+        "pattern": "admin:dashboard_menu_changelist",
+        "order": 2,
+        "auth": null,
+        "children": []
+      },
+      {
+        "name": "用户管理",
+        "icon_name": "",
+        "pattern": "admin:account_user_changelist",
+        "order": 3,
+        "auth": null,
+        "children": []
+      },
+      {
+        "name": "用户信息管理",
+        "icon_name": "",
+        "pattern": "admin:account_userinfo_changelist",
+        "order": 4,
+        "auth": null,
+        "children": []
+      },
+      {
+        "name": "全部预约记录",
+        "icon_name": "",
+        "pattern": "admin:reserve_reserverecord_changelist",
+        "order": 5,
+        "auth": null,
+        "children": []
+      },
+      {
+        "name": "可预约类别设置",
+        "icon_name": "",
+        "pattern": "admin:reserve_reservetype_changelist",
+        "order": 6,
+        "auth": null,
+        "children": []
+      }
+    ]
+  }
+]

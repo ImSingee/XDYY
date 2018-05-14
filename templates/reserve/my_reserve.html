@@ -1,0 +1,235 @@
+{% extends 'base.html' %}
+{% block content_titlle %}我的预约{% endblock content_titlle %}
+{% block content_titlle_small %}{{ title_small }}{% endblock %}
+{% block content_content_width %}12{% endblock %}
+{% block content_content_content_width %}12{% endblock %}
+{% block content_content_content %}
+    以下是您在 {{ condition }} 的预约信息
+    <div class="row">
+        {% if rrzs %}
+            <ul class="sortable-list connectList agile-list reserve_result">
+                {% for rr,rri in rrzs %}
+                    {#                <div class="">#}
+                    <li class="info-element col-sm-6">
+                        <div class="agile-detail">
+                            {#                            <a href="#" class="pull-right btn btn-xs btn-white">标签</a>#}
+                            <div class="pull-right">{{ rr.id }}#</div>
+                        </div>
+                        <h3>被预约人信息</h3>
+                        <div class="row">
+                            <div class="col-xs-12"><b>姓名</b></div>
+                            <div class="col-xs-12">{{ rr.main_time.reservee.name }}</div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xs-12"><b>联系方式</b></div>
+                            <div class="col-xs-12">电子邮件 - {{ rr.main_time.reservee.email }}
+                                <br>电话号码 - {{ rr.main_time.reservee.tel }}</div>
+                        </div>
+                        <h3>预约信息</h3>
+                        <div class="row">
+                            <div class="col-xs-12"><b>预约类别</b></div>
+                            <div class="col-xs-12">{{ rri.type }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12"><b>预约内容：</b></div>
+                            <div class="col-xs-12">{{ rr.content }}</div>
+                        </div>
+                        <h3>预约时间</h3>
+                        {% if rr.has_confirmed %}
+                            <div class="row" style="color: red;">
+                                <div class="col-xs-12"><b>已确认的时间</b></div>
+                                <div class="col-xs-12"><i class="fa fa-clock-o"></i>
+                                    {% with rr.confirm_time as t %}{% include 'base/period.html' %}{% endwith %}</div>
+                            </div>
+                        {% else %}
+                            <div class="row">
+                                <div class="col-xs-12"><b>首选时间</b></div>
+                                <div class="col-xs-12"><i class="fa fa-clock-o"></i>
+                                    {% with rr.main_time as t %}{% include 'base/period.html' %}{% endwith %}</div>
+                            </div>
+                            {% if rri.extra_time %}
+                                <div class="row">
+                                    <div class="col-xs-12"><b>备选时间</b></div>
+                                    <div class="col-xs-12">
+                                        {% for t in rri.extra_time %}
+                                            <i class="fa fa-clock-o"></i> {% include 'base/period.html' %}<br>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                        <h3>预约状态</h3>
+                        <div class="row">
+                            <div class="col-xs-12"><b>当前状态</b></div>
+                            <div class="col-xs-12">{{ rr.get_status_display }}</div>
+                        </div>
+                        {% if rr.has_confirmed %}
+                            <div class="row" style="color: red;">
+                                <div class="col-xs-12"><b>预约地点</b></div>
+                                <div class="col-xs-12">{{ rr.address.name }}</div>
+                            </div>
+                        {% endif %}
+                        <div class="agile-detail">
+
+
+                            {% if rr.is_submited or rr.is_confirmed %}
+                                <a href="#modal-form" class="btn btn-sm btn-white" data-toggle="modal">修改预约信息</a>
+                                <a href="#modal-form" class="btn btn-sm btn-danger" data-toggle="modal">取消预约</a>
+                            {% elif rr.is_completed %}
+                                {% if not rr.reserver_marked %}
+                                    <a href="#rank-form" class="btn btn-sm btn-white" data-toggle="modal"
+                                       data-id="{{ rr.id }}">评价</a>
+                                {% endif %}
+                            {% endif %}
+
+                            <br>
+                        </div>
+                    </li>
+                    {#                </div>#}
+                {% endfor %}
+            </ul>
+        {% else %}
+            <ul class="sortable-list connectList agile-list reserve_result">
+                <li class="info-element col-sm-6">
+                    很抱歉，没有符合条件的预约
+                </li>
+            </ul>
+        {% endif %}
+    </div>
+{% endblock content_content_content %}
+{% block js %}
+    <script>
+        $('#rank-form').on('show.bs.modal', function (event) {
+            target = $(event.relatedTarget);
+            choose_id = target.data('id');
+            modal = $(this);
+            modal.find('[name=id]').val(choose_id);
+        });
+
+        var check = 0;//该变量是记录当前选择的评分
+
+        function over(param) {
+            if (param >= 1) {
+                $("#star1").text("★");
+            }
+            if (param >= 2) {
+                $("#star2").text("★");
+            }
+            if (param >= 3) {
+                $("#star3").text("★");
+            }
+            if (param >= 4) {
+                $("#star4").text("★");
+            }
+            if (param >= 5) {
+                $("#star5").text("★");
+            }
+        }
+
+        function out() {
+            if (check == 0) {
+                $("#star1").text("☆");
+                $("#star2").text("☆");
+                $("#star3").text("☆");
+                $("#star4").text("☆");
+                $("#star5").text("☆");
+            } else if (check == 1) {
+                $("#star1").text("★");
+                $("#star2").text("☆");
+                $("#star3").text("☆");
+                $("#star4").text("☆");
+                $("#star5").text("☆");
+            } else if (check ==  2) {
+                $("#star1").text("★");
+                $("#star2").text("★");
+                $("#star3").text("☆");
+                $("#star4").text("☆");
+                $("#star5").text("☆");
+            } else if (check == 3) {
+                $("#star1").text("★");
+                $("#star2").text("★");
+                $("#star3").text("★");
+                $("#star4").text("☆");
+                $("#star5").text("☆");
+            } else if (check == 4) {
+                $("#star1").text("★");
+                $("#star2").text("★");
+                $("#star3").text("★");
+                $("#star4").text("★");
+                $("#star5").text("☆");
+            } else if (check == 5) {
+                $("#star1").text("★");
+                $("#star2").text("★");
+                $("#star3").text("★");
+                $("#star4").text("★");
+                $("#star5").text("★");
+            }
+        }
+
+        function click(param) {
+            check = param;//记录当前打分
+            $('#mark').val(check)
+            out();//设置星星数
+        }
+    </script>
+{% endblock js %}
+{% block foot %}
+    <div id="modal-form" class="modal fade" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h3 class="m-t-none m-b">修改/取消预约</h3>
+                            <p>本功能暂时只针对学导开放，如果您需要变更预约信息或取消预约，请联系学导。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="rank-form" class="modal fade" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h3 class="m-t-none m-b">评价对方</h3>
+                            <p>请给予对方评价</p>
+                            <form method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="type" value="mark">
+                                <input type="hidden" name="id" value="">
+                                <input type="hidden" name="mark" id="mark" value="0">
+                                <div class="form-group">
+                                    <label class="control-label">评价</label>
+                                    <div>
+                                        <a href="javascript:click(1)" id="star1" onMouseOver="over(1)"
+                                           onMouseOut="out(1)">☆</a>
+                                        <a href="javascript:click(2)" id="star2" onMouseOver="over(2)"
+                                           onMouseOut="out(2)">☆</a>
+                                        <a href="javascript:click(3)" id="star3" onMouseOver="over(3)"
+                                           onMouseOut="out(3)">☆</a>
+                                        <a href="javascript:click(4)" id="star4" onMouseOver="over(4)"
+                                           onMouseOut="out(4)">☆</a>
+                                        <a href="javascript:click(5)" id="star5" onMouseOver="over(5)"
+                                           onMouseOut="out(5)">☆</a>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="note" class="control-label">留言</label>
+                                    <input type="text" name="note" id="note" class="form-control" required>
+                                </div>
+                                <div>
+                                    <button type="submit" class="btn btn-sm btn-success m-t-n-xs">提交评价</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock foot %}
+

@@ -1,0 +1,35 @@
+<form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="type" value="confirm">
+    <input type="hidden" name="id" value="{{ rr.id }}">
+    <div class="form-group">
+        <label>请选择要接受预约的时间</label>
+        {% for t in rr.time.all %}
+            <div class="checkbox i-checks">
+                <input type="radio" name="confirmed_time" value="{{ t.id }}" required> {% include 'base/period.html' %}
+            </div>
+        {% endfor %}
+    </div>
+    <div class="form-group">
+        <label>请选择要接受预约的地点</label>
+        {% for p in ps %}
+            <div class="checkbox i-checks">
+                <input type="radio" name="confirmed_place" value="{{ p.id }}" required> {{ p.name }}
+            </div>
+        {% endfor %}
+    </div>
+    <div>
+        <button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="submit"><strong>确认预约</strong>
+        </button>
+    </div>
+</form>
+{% load static from staticfiles %}
+<script src="{% static 'js/plugins/iCheck/icheck.min.js' %}"></script>
+<script>
+    $(document).ready(function () {
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+    });
+</script>

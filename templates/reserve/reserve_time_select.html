@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+{% block head %}
+    {% load static from staticfiles %}
+{% endblock head %}
+{% block content %}
+    <div class="ibox float-e-margins col-sm-6">
+        <div class="ibox-title">
+            <h5>新预约
+                <small>请选择预约时间</small>
+            </h5>
+        </div>
+        <div class="ibox-content">
+            <div class="row">
+                <div class="col-sm-8">
+                    <div class="row">
+                        {% with reservee as r %}
+                            <div class="col-sm-12">
+                                <div class="contact-box">
+                                    <a>
+                                        <div class="col-sm-4">
+                                            <div class="text-center">
+                                                <img alt="image" class="img-circle m-t-xs img-responsive"
+                                                     src="/media/{{ r.avatar }}"
+                                                     style="width: 80px; margin: auto;">
+                                                <div class="m-t-xs font-bold">{{ r.userinfo.short_intro|linebreaks }}</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <h3><strong>{{ r.name }}</strong></h3>
+                                            {% if r.userinfo.default_address %}
+                                                <p><i class="fa fa-map-marker"></i> {{ r.userinfo.default_address }}
+                                                </p>
+                                            {% endif %}
+                                            {{ r.userinfo.intro|linebreaks }}
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </a>
+                                </div>
+                            </div>
+                        {% endwith %}
+                    </div>
+                </div>
+
+                <div class="col-sm-8">
+                    {#                    <h3 class="m-t-none m-b">在预约前，请填写您的相关信息以验证</h3>#}
+                    <form role="form" method="post">
+                        {% csrf_token %}
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                <ul>
+                                    {% for k in form.non_field_errors %}
+                                        <li>{{ k }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                        <div class="form-group">
+                            <label for="main_time" class="control-label">请选择您要预约的时间</label>
+                            <input type="hidden" id="main_time" name="main_time">
+                            <input type="text" data-id="main_time" id="choose_main_time" class="form-control"
+                                   placeholder="点击以选择时间"
+                                   data-toggle="modal"
+                                   data-target="#myModal" readonly required>
+                        </div>
+                        {% if extra_option %}
+                            <div class="form-group">
+                                <label for="extra_time" class="control-label">您可以另外选择一些备选时间</label>
+                                {% for e in extra_option %}
+                                    <input type="hidden" id="extra_time_{{ e }}" name="extra_time">
+                                    <input type="text" data-id="extra_time_{{ e }}" class="form-control"
+                                           placeholder="点击以选择时间" data-toggle="modal" style="margin-bottom: 5px;"
+                                           data-target="#myModal" id="choose_extra_time_{{ e }}" readonly>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <div>
+                            <button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="submit">
+                                <strong>提交预约</strong>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+{% block foot %}
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">选择预约时间</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="control-label">选择预约日期</label>
+                        <p class="form-control-static date-static" hidden></p>
+                        <div class="row date-choose-group">
+                            {% if rts %}
+                                {% for rt in rts %}
+                                    <div class="col-xs-6 col-sm-4 col-md-3">
+                                        <button type="button" class="btn btn-primary btn-date-select" style="margin-top: 2px;"
+                                                data-date="{{ rt.date|date:'Y-m-d' }}">{{ rt.date|date:'Y-m-d' }}</button>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="col-xs-6 col-sm-4 col-md-3">
+                                    很抱歉，该学导所有预约均已满，请稍后重试或更换预约对象
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="form-group time-div" hidden>
+                        <label class="control-label">预约时间</label>
+                        <p class="form-control-static time-static" hidden></p>
+                        <div class="row time-choose-group"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock foot %}
+{% block js %}
+    <script>
+        var choose_id;
+        var choose_date;
+        $('#myModal').on('show.bs.modal', function (event) {
+            input = $(event.relatedTarget);
+            choose_id = input.data('id');
+            modal = $(this);
+            {#modal.find('.modal-title').text('时间 ' + choose_id);#}
+            //恢复初始状态
+            $(".date-static").trigger("click");
+        });
+        $('.btn-date-select').on('click', function (event) {
+            var button = $(this);
+            choose_date = button.data('date');
+            $('.date-choose-group').hide();
+            $('.date-static').text(choose_date).show();
+            $('.time-div').show();
+            $.get("{% url 'reserve:reserve_time_get_view' key %}?date=" + choose_date, function (result) {
+                $(".time-choose-group").html(result);
+                $('.btn-time-select').on('click', function (event) {
+                    var button = $(this);
+                    choose_time = button.data('time');
+                    choose_list = button.data('list');
+                    $('.time-choose-group').hide();
+                    $('.time-static').text(choose_time).show();
+                    $('#choose_' + choose_id).val(choose_date + '  ' + choose_time);
+                    $('#' + choose_id).val(choose_list);
+                    $('#myModal').modal('hide');
+                });
+            });
+        });
+        $('.date-static').on('click', function (event) {
+            $(".time-static").trigger("click");
+            date_static = $(this);
+            choose_date = undefined; // Extract info from data-* attributes
+            $('.date-choose-group').show();
+            $('.date-static').text('').hide();
+            $('.time-div').hide();
+        });
+        $('.time-static').on('click', function (event) {
+            time_static = $(this);
+            choose_time = undefined; // Extract info from data-* attributes
+            $('.time-choose-group').show();
+            $('.time-static').text('').hide();
+        });
+    </script>
+{% endblock js %}

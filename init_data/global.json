@@ -1,0 +1,26 @@
+{
+  "siteName": {
+    "value": "学导有约",
+    "description": "站点名称"
+  },
+  "siteStatus": {
+    "value": "On",
+    "description": "站点状态 On-正常, Off-仅允许超级管理员登录"
+  },
+  "loginStatus": {
+    "value": "Off",
+    "description": "登录状态 On-正常, Off-仅允许管理员登录（siteStatus=Off 时本选项无效）"
+  },
+  "preDayMin": {
+    "value": 1,
+    "description": "最少提前几天预约"
+  },
+  "preDayMax": {
+    "value": 10,
+    "description": "最多提前几天预约"
+  },
+  "extraOption": {
+    "value": 2,
+    "description": "每次预约最多选择几个额外时间"
+  }
+}

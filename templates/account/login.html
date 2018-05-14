@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="middle-box animated fadeInRightBig">
+
+        <form class="m-t" role="form" method="post">
+
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="id_username">用户名</label>
+                <input type="text" class="form-control" name="username" placeholder="默认为学号" maxlength="254"
+                       required id="id_username"/>
+            </div>
+            <div class="form-group">
+                <label for="id_password">密码</label>
+                <input type="password" name="password" class="form-control" placeholder="默认为身份证号后六位" required id="id_password"/>
+
+            </div>
+            <button type="submit" class="btn btn-primary block full-width m-b">登 录</button>
+
+
+            <p class="text-muted text-center">
+                <a data-toggle="modal" class="m-t" href="#modal-form">忘记密码了？</a>
+            </p>
+
+
+        </form>
+
+
+    </div>
+
+    <div id="modal-form" class="modal fade" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h3 class="m-t-none m-b">找回密码</h3>
+
+                            <p>系统开放时已经为您设置了密码，您的初始密码如下</p>
+                            <ul>
+                                <li>学生用户：身份证号码后六位或您的学号</li>
+                                <li>学导用户：您的用户名（首字母大写）+手机号码后六位</li>
+                            </ul>
+
+                            <p>如果您修改后忘记了密码，请通过微信重置密码或持有效身份证件到管理员办公室重置</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

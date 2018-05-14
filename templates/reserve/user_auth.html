@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="ibox float-e-margins col-sm-6">
+        <div class="ibox-title">
+            <h5>新预约
+                <small>身份验证</small>
+            </h5>
+            <div class="ibox-tools">
+                {#                <a class="collapse-link">#}
+                {#                    <i class="fa fa-chevron-up"></i>#}
+                {#                </a>#}
+                {#                <a class="dropdown-toggle" data-toggle="dropdown" href="form_basic.html#">#}
+                {#                    <i class="fa fa-wrench"></i>#}
+                {#                </a>#}
+                {#                <ul class="dropdown-menu dropdown-user">#}
+                {#                    <li><a href="form_basic.html#">选项1</a>#}
+                {#                    </li>#}
+                {#                    <li><a href="form_basic.html#">选项2</a>#}
+                {#                    </li>#}
+                {#                </ul>#}
+                {#                <a class="close-link">#}
+                {#                    <i class="fa fa-times"></i>#}
+                {#                </a>#}
+            </div>
+        </div>
+        <div class="ibox-content">
+            <div class="row">
+                <div class="col-sm-8">
+                    <h3 class="m-t-none m-b">在预约前，请填写您的相关信息以验证</h3>
+                    <form role="form" method="post">
+                        {% csrf_token %}
+                        {% include 'base/form.html' %}
+                        <div>
+                            <button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="submit"><strong>下一步：选择预约类别</strong>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

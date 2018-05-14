@@ -1,0 +1,12 @@
+{% if form.non_field_errors %}
+    <div class="alert alert-danger">
+        <ul>
+            {% for k in form.non_field_errors %}
+                <li>{{ k }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+{% for field in form %}
+    {% include 'base/field.html' %}
+{% endfor %}

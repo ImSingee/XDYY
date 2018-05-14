@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" autoUpload="Always" serverName="aliyun" persistUploadOnCheckin="false">
+    <serverData>
+      <paths name="aliyun">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/sites/XDYY/XDYY" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+          <excludedPaths>
+            <excludedPath local="true" path="$PROJECT_DIR$/venv" />
+            <excludedPath local="true" path="$PROJECT_DIR$/.idea" />
+            <excludedPath local="true" path="$PROJECT_DIR$/media/export" />
+            <excludedPath local="true" path="$PROJECT_DIR$/media/avatars" />
+            <excludedPath local="true" path="$PROJECT_DIR$/XDYY/settings.py" />
+            <excludedPath local="true" path="$PROJECT_DIR$/media" />
+          </excludedPaths>
+        </serverdata>
+      </paths>
+      <paths name="root@aliyun">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/sites/XDYY/XDYY" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+          <excludedPaths>
+            <excludedPath local="true" path="$PROJECT_DIR$/venv" />
+            <excludedPath local="true" path="$PROJECT_DIR$/.idea" />
+            <excludedPath local="true" path="$PROJECT_DIR$/media/export" />
+            <excludedPath local="true" path="$PROJECT_DIR$/media/avatars" />
+            <excludedPath local="true" path="$PROJECT_DIR$/XDYY/settings.py" />
+            <excludedPath local="true" path="$PROJECT_DIR$/media" />
+          </excludedPaths>
+        </serverdata>
+      </paths>
+    </serverData>
+    <option name="myAutoUpload" value="ALWAYS" />
+  </component>
+</project>

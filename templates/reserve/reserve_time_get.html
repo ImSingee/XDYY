@@ -1,0 +1,15 @@
+{% if rts %}
+    {% for rt in rts %}
+        <div class="col-xs-6 col-sm-4 col-md-3">
+            <button type="button" class="btn btn-primary btn-time-select m-t-n-xs" data-list="{{ rt.id }}"
+                    data-start_time="{{ rt.start_time|date:'H:i' }}" data-end_time="{{ rt.end_time|date:'H:i' }}"
+                    data-time="{{ rt.start_time|date:'H:i' }} - {{ rt.end_time|date:'H:i' }}">
+                {{ rt.start_time|date:'H:i' }} - {{ rt.end_time|date:'H:i' }}</button>
+        </div>
+    {% endfor %}
+{% else %}
+    <div class="col-xs-6 col-sm-4 col-md-3">
+        很抱歉，该日期暂时无法预约，请更换
+    </div>
+
+{% endif %}
