@@ -3,7 +3,20 @@
 {% block content_content_content_width %}12{% endblock %}
 {% block content_content_content %}
     以下是您的预约信息，请记好并在学导确认后准时出席
+
     <ul class="sortable-list connectList agile-list reserve_result">
+
+        <li class="info-element">
+            <h3>微信绑定</h3>
+            <div class="row">
+                <div class="col-xs-12">为了保证您可以收到预约状态的通知，请绑定您的微信。</div>
+                <div class="col-xs-12">注：此处绑定和辅导员有约平台不互通</div>
+            </div>
+            <div class="agile-detail">
+                <a href="{% url 'wechat:bind' %}" class="pull-left btn btn-sm btn-success">绑定微信</a>
+                <br><br>
+            </div>
+        </li>
 
         <li class="info-element">
             <h3>被预约人信息</h3>
