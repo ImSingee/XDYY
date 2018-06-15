@@ -3,8 +3,12 @@ from wechatpy.client import WeChatClient
 from .databasestorage import DatabaseStorage
 from .models import SessionStorage, WechatConfig, WechatUser
 
-app_id = WechatConfig.get_value('app_id')
-app_secret = WechatConfig.get_value('app_secret')
+try:
+    app_id = WechatConfig.get_value('app_id')
+    app_secret = WechatConfig.get_value('app_secret')
+except:
+    app_id = ''
+    app_secret = ''
 
 ds = DatabaseStorage(SessionStorage)
 
