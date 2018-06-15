@@ -56,11 +56,14 @@ INSTALLED_APPS = [
     'hijack',
     'compat',
     'guardian',
+    'rest_framework',
+    'rest_framework.authtoken',
 
     'main.apps.MainConfig',
     'account.apps.AccountConfig',
     'dashboard.apps.DashboardConfig',
     'reserve.apps.ReserveConfig',
+    'wechat.apps.WechatConfig',
 ]
 
 MIDDLEWARE = [
@@ -176,6 +179,15 @@ HIJACK_USE_BOOTSTRAP = True
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',
     messages.DEBUG: 'info',
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        # 'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication'
+    ),
+    # 'DEFAULT_RENDERER_CLASSES': default_renderer_classes
 }
 
 if DEBUG:

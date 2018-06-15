@@ -14,6 +14,15 @@ from reserve.models import ReserveType, RepeatReserveTime, ReservePlace, Reserve
 BASE_DIR = settings.BASE_DIR
 
 
+def init_wp(func):
+    def inner(*args, **kwargs):
+        print('\033[91m' + '* [START] {func_name}'.format(func_name=func.__name__) + '\033[0m')
+        func(*args, **kwargs)
+        print('\033[91m' + '* [END]   {func_name}'.format(func_name=func.__name__) + '\033[0m')
+
+    return inner
+
+
 def init_dir():
     paths = ['media', 'media/export', 'media/avatars']
     paths = [os.path.join(BASE_DIR, x) for x in paths]
@@ -58,9 +67,7 @@ def init_permission():
 
 
 def init_superuser():
-    from configparser import ConfigParser
-    cf = ConfigParser()
-    cf.read(os.path.join(settings.CONFIG_DIR), encoding='utf-8')
+    from XDYY.settings import cf
 
     username = cf.get('SUPERUSER', 'username')
     password = cf.get('SUPERUSER', 'password')
@@ -71,9 +78,7 @@ def init_superuser():
 
 
 def init_admin():
-    from account.utils import UserSettings
-    from configparser import ConfigParser
-    cf = ConfigParser()
+    from XDYY.settings import cf
     cf.read(os.path.join(settings.CONFIG_DIR), encoding='utf-8')
 
     username = cf.get('ADMIN', 'username')
@@ -351,6 +356,17 @@ def init_reserve_place():
         t.save()
 
 
+@init_wp
+def init_wechat():
+    from wechat.models import WechatConfig
+    from XDYY.settings import cf
+    WechatConfig.set_value('app_id', cf.get('WECHAT', 'app_id', fallback=''), '微信平台 AppId')
+    WechatConfig.set_value('app_secret', cf.get('WECHAT', 'app_secret', fallback=''), '微信平台 AppSecret')
+    WechatConfig.set_value('token', cf.get('WECHAT', 'token', fallback=''), '微信平台令（Token）')
+    WechatConfig.set_value('encoding_aes_key', cf.get('WECHAT', 'encoding_aes_key', fallback=''),
+                           '微信平台消息加解密密钥（EncodingAESKey）')
+
+
 def init():
     init_dir()
     init_global()
@@ -365,6 +381,8 @@ def init():
     init_student()
     init_xuedao()
     init_gender()
+    # wechat
+    init_wechat()
 
 
 def init_test():
