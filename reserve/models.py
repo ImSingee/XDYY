@@ -52,6 +52,11 @@ class ReserveTime(models.Model):
     time_add = models.DateTimeField(verbose_name='添加时间', auto_now_add=True, editable=False)
     time_edit = models.DateTimeField(verbose_name='修改时间', auto_now=True, null=True, blank=True, editable=False)
 
+    @property
+    def display(self):
+        return '{} {}-{}'.format(self.date.strftime('%Y-%m-%d'),
+                                 self.start_time.strftime('%H:%M'), self.end_time.strftime('%H:%M'))
+
     def __str__(self):
         return '[{}# {}]{} {}-{}'.format(self.reservee.id, self.reservee.name, self.date.strftime('%Y-%m-%d'),
                                          self.start_time.strftime('%H:%M'), self.end_time.strftime('%H:%M'))
@@ -273,6 +278,10 @@ class ReservePlace(models.Model):
     type = models.IntegerField(verbose_name='地点类型', default=0, choices=TYPE_CHOICES)
 
     enabled = models.BooleanField(verbose_name='可选', default=True)
+
+    @property
+    def display(self):
+        return self.name
 
     class Meta:
         verbose_name = '可选预约地点'

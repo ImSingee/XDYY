@@ -37,7 +37,7 @@ def send_template_message(weuser_obj, trigger_obj, data=None, url=None):
     if data is None:
         data = {}
     template_data = {
-        'first': {'value': trigger_obj.first.replace('\\n', '\n').format(**data),
+        'first': {'value': trigger_obj.first.replace('\\n', '\n').format(**data).rstrip('\n') + '\n',
                   'color': trigger_obj.first_color},
         'keyword1': {'value': trigger_obj.keyword1.replace('\\n', '\n').format(**data),
                      'color': trigger_obj.keyword1_color},
@@ -51,7 +51,7 @@ def send_template_message(weuser_obj, trigger_obj, data=None, url=None):
                      'color': trigger_obj.keyword5_color},
         'keyword6': {'value': trigger_obj.keyword6.replace('\\n', '\n').format(**data),
                      'color': trigger_obj.keyword6_color},
-        'remark': {'value': trigger_obj.remark.replace('\\n', '\n').format(**data),
+        'remark': {'value': '\n' + trigger_obj.remark.replace('\\n', '\n').format(**data).lstrip('\n'),
                    'color': trigger_obj.remark_color},
     }
 

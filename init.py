@@ -367,6 +367,32 @@ def init_wechat():
                            '微信平台消息加解密密钥（EncodingAESKey）')
 
 
+@init_wp
+def init_trigger():
+    from wechat.models import TemplateMessageTrigger, TemplateMessageTemplate
+
+    with open(os.path.join(BASE_DIR, 'init_data', 'template_trigger.json'), 'r', encoding='utf-8') as f:
+        triggers = json.load(f)
+
+    TemplateMessageTrigger.objects.all().delete()
+
+    for trigger in triggers:
+        tmt = TemplateMessageTrigger(
+            type=trigger['type'],
+            first=trigger['first']['value'], first_color=trigger['first']['color'],
+            keyword1=trigger['keyword1']['value'], keyword1_color=trigger['keyword1']['color'],
+            keyword2=trigger['keyword2']['value'], keyword2_color=trigger['keyword2']['color'],
+            keyword3=trigger['keyword3']['value'], keyword3_color=trigger['keyword3']['color'],
+            keyword4=trigger['keyword4']['value'], keyword4_color=trigger['keyword4']['color'],
+            keyword5=trigger['keyword5']['value'], keyword5_color=trigger['keyword5']['color'],
+            keyword6=trigger['keyword6']['value'], keyword6_color=trigger['keyword6']['color'],
+            remark=trigger['remark']['value'], remark_color=trigger['remark']['color'],
+        )
+        tmt.save()
+        tmt.template = TemplateMessageTemplate.objects.get(template_id=trigger['template_id'])
+        tmt.save()
+
+
 def init():
     init_dir()
     init_global()

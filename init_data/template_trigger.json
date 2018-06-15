@@ -1,0 +1,224 @@
+[
+  {
+    "type": "201",
+    "name": "TO预约人 - 预约提交成功",
+    "template_id": "SddU90BKisJMty4tvlVZZxRTiJjs7KKWRQE6xIYXR_E",
+    "first": {
+      "value": "您在「学导有约」平台的预约已经提交成功，请等待确认",
+      "color": ""
+    },
+    "keyword1": {
+      "value": "{reservee_name}",
+      "color": ""
+    },
+    "keyword2": {
+      "value": "{reserve_time} 等",
+      "color": ""
+    },
+    "keyword3": {
+      "value": "{reservee_tel}",
+      "color": ""
+    },
+    "keyword4": {
+      "value": "无",
+      "color": ""
+    },
+    "keyword5": {
+      "value": "",
+      "color": ""
+    },
+    "keyword6": {
+      "value": "",
+      "color": ""
+    },
+    "remark": {
+      "value": "请按时到达预约地点，如有问题请自行联系被预约人。",
+      "color": ""
+    }
+  },
+  {
+    "type": "301",
+    "name": "TO被预约人 - 收到预约",
+    "template_id": "J_UpQ0KFZspkHDUZvH43LAOXRgO1y_hW1kqVmiGa0rI",
+    "first": {
+      "value": "您在「学导有约」平台收到了一条新预约",
+      "color": ""
+    },
+    "keyword1": {
+      "value": "{reserve_time} 等",
+      "color": ""
+    },
+    "keyword2": {
+      "value": "{reserver_name}",
+      "color": ""
+    },
+    "keyword3": {
+      "value": "{reserver_tel}",
+      "color": ""
+    },
+    "keyword4": {
+      "value": "{reserve_content}",
+      "color": ""
+    },
+    "keyword5": {
+      "value": "无",
+      "color": ""
+    },
+    "keyword6": {
+      "value": "",
+      "color": ""
+    },
+    "remark": {
+      "value": "请尽快查看预约并选择确认或拒绝",
+      "color": ""
+    }
+  },
+  {
+    "type": "202",
+    "name": "TO预约人 - 预约被拒绝",
+    "template_id": "8dWv7_n33iH-kOWcYYOJUXhRn-5tTzCpBMWsKV9kRgA",
+    "first": {
+      "value": "您在「学导有约」平台的预约被拒绝",
+      "color": ""
+    },
+    "keyword1": {
+      "value": "向 {reservee_name} 的预约",
+      "color": ""
+    },
+    "keyword2": {
+      "value": "{reserve_time} 等",
+      "color": ""
+    },
+    "keyword3": {
+      "value": "学导拒绝",
+      "color": ""
+    },
+    "keyword4": {
+      "value": "",
+      "color": ""
+    },
+    "keyword5": {
+      "value": "",
+      "color": ""
+    },
+    "keyword6": {
+      "value": "",
+      "color": ""
+    },
+    "remark": {
+      "value": "",
+      "color": ""
+    }
+  },
+  {
+    "type": "203",
+    "name": "TO预约人 - 预约被取消",
+    "template_id": "8dWv7_n33iH-kOWcYYOJUXhRn-5tTzCpBMWsKV9kRgA",
+    "first": {
+      "value": "您在「学导有约」平台的预约被取消",
+      "color": ""
+    },
+    "keyword1": {
+      "value": "向 {reservee_name} 的预约",
+      "color": ""
+    },
+    "keyword2": {
+      "value": "{reserve_time} 等",
+      "color": ""
+    },
+    "keyword3": {
+      "value": "学导取消",
+      "color": ""
+    },
+    "keyword4": {
+      "value": "",
+      "color": ""
+    },
+    "keyword5": {
+      "value": "",
+      "color": ""
+    },
+    "keyword6": {
+      "value": "",
+      "color": ""
+    },
+    "remark": {
+      "value": "",
+      "color": ""
+    }
+  },
+  {
+    "type": "206",
+    "name": "TO预约人 - 预约被标记为无故不出席",
+    "template_id": "8dWv7_n33iH-kOWcYYOJUXhRn-5tTzCpBMWsKV9kRgA",
+    "first": {
+      "value": "您在「学导有约」平台的预约被标注为无故未出席",
+      "color": ""
+    },
+    "keyword1": {
+      "value": "向 {reservee_name} 的预约",
+      "color": ""
+    },
+    "keyword2": {
+      "value": "{confirm_time}",
+      "color": ""
+    },
+    "keyword3": {
+      "value": "被标注为无故未出席",
+      "color": "#ff0000"
+    },
+    "keyword4": {
+      "value": "",
+      "color": ""
+    },
+    "keyword5": {
+      "value": "",
+      "color": ""
+    },
+    "keyword6": {
+      "value": "",
+      "color": ""
+    },
+    "remark": {
+      "value": "您本次的预约被标注为无故未出席。这会影响您的信誉，因此如学导错误标注请尽快联系解决。",
+      "color": "#ff0000"
+    }
+  },
+  {
+    "type": "204",
+    "name": "TO预约人 - 预约被确认",
+    "template_id": "jyG1ZusCAy2pTGd2Uf3SpLCv04_eOv1bpOJksgXu334",
+    "first": {
+      "value": "您在「学导有约」平台的预约已被确认",
+      "color": ""
+    },
+    "keyword1": {
+      "value": "{confirm_time}",
+      "color": ""
+    },
+    "keyword2": {
+      "value": "{reservee_name}",
+      "color": ""
+    },
+    "keyword3": {
+      "value": "无",
+      "color": ""
+    },
+    "keyword4": {
+      "value": "",
+      "color": ""
+    },
+    "keyword5": {
+      "value": "",
+      "color": ""
+    },
+    "keyword6": {
+      "value": "",
+      "color": ""
+    },
+    "remark": {
+      "value": "请在上述时间内到达{confirm_place}，有任何问题请联系学导",
+      "color": ""
+    }
+  }
+]

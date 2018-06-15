@@ -11,6 +11,7 @@ from django.views.generic.base import TemplateView, View
 
 from account.models import User
 from main.utils import GlobalSettings
+from wechat import triggers
 from .forms import UserAuthForm, ReserveTypeChooseForm, ReserveTypeConfirmForm, ReserveeSettingsForm, NewCanReserveTime, \
     NewCanReserveRepeatTime
 from .models import ReserveType, ReserveTime, ReserveRecord, ReservePlace, RepeatReserveTime
@@ -319,6 +320,7 @@ class NewReserveDoneView(TemplateView):
                 c.ed = F('ed') + 1
                 c.save()
             rr.save()
+            triggers.new(rr)
 
         except Exception as e:
             try:
@@ -511,6 +513,7 @@ class ReserveMeView(LoginRequiredMixin, TemplateView):
                 r.ed -= 1
                 r.save()
 
+            triggers.confirm(rr)
             messages.success(request, '预约确认成功！')
             return redirect(reverse('reserve:reserve_me', kwargs={'type': 'confirmed'}))
         if _type == 'reject':
@@ -527,6 +530,7 @@ class ReserveMeView(LoginRequiredMixin, TemplateView):
                 r.ed -= 1
                 r.save()
 
+            triggers.reject(rr)
             messages.success(request, '预约拒绝成功')
             return redirect(reverse('reserve:reserve_me', kwargs={'type': type}))
 
@@ -544,6 +548,7 @@ class ReserveMeView(LoginRequiredMixin, TemplateView):
                 r.ed -= 1
                 r.save()
 
+            triggers.cancel(rr)
             messages.success(request, '预约取消成功')
             return redirect(reverse('reserve:reserve_me', kwargs={'type': type}))
 
@@ -555,6 +560,8 @@ class ReserveMeView(LoginRequiredMixin, TemplateView):
 
             rr.status = -201
             rr.save()
+
+            triggers.absent(rr)
 
             messages.success(request, '标记预约状态为预约人未出席成功')
             return redirect(reverse('reserve:reserve_me', kwargs={'type': type}))
