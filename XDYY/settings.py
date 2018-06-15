@@ -155,15 +155,9 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 LOGIN_URL = 'account:login'
 LOGIN_REDIRECT_URL = '/'
-
-if not DEBUG:
-    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-else:
-    STATICFILES_DIRS = (
-        "static/",
-    )
 
 # MediaFiles
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

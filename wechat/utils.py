@@ -25,9 +25,46 @@ def bind_wechat(user_obj, openid):
     return True
 
 
-def send_template_message():
-    # TODO
-    client.message.send_template()
+def send_template_message(weuser_obj, trigger_obj, data=None, url=None):
+    """
+    发送模板消息
+    :param weuser_obj: WeUser 对象
+    :param trigger_obj: TemplateMessageTrigger 对象
+    :param data: TMT 中的变量值
+    :param url: 点击跳转的 url
+    :return:
+    """
+    if data is None:
+        data = {}
+    template_data = {
+        'first': {'value': trigger_obj.first.replace('\\n', '\n').format(**data),
+                  'color': trigger_obj.first_color},
+        'keyword1': {'value': trigger_obj.keyword1.replace('\\n', '\n').format(**data),
+                     'color': trigger_obj.keyword1_color},
+        'keyword2': {'value': trigger_obj.keyword2.replace('\\n', '\n').format(**data),
+                     'color': trigger_obj.keyword2_color},
+        'keyword3': {'value': trigger_obj.keyword3.replace('\\n', '\n').format(**data),
+                     'color': trigger_obj.keyword3_color},
+        'keyword4': {'value': trigger_obj.keyword4.replace('\\n', '\n').format(**data),
+                     'color': trigger_obj.keyword4_color},
+        'keyword5': {'value': trigger_obj.keyword5.replace('\\n', '\n').format(**data),
+                     'color': trigger_obj.keyword5_color},
+        'keyword6': {'value': trigger_obj.keyword6.replace('\\n', '\n').format(**data),
+                     'color': trigger_obj.keyword6_color},
+        'remark': {'value': trigger_obj.remark.replace('\\n', '\n').format(**data),
+                   'color': trigger_obj.remark_color},
+    }
+
+    url = url or trigger_obj.url
+
+    client.message.send_template(user_id=weuser_obj.openid,
+                                 template_id=trigger_obj.template.template_id,
+                                 data=template_data,
+                                 url=url)
+
+
+def trigger_submit():
+    pass
 
 
 def save_template_info():

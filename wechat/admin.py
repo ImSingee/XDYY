@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import WechatConfig, TemplateMessageTemplate, WechatUser
+from .models import WechatConfig, TemplateMessageTemplate, WechatUser, TemplateMessageTrigger
 
 
 @admin.register(WechatConfig)
@@ -17,3 +17,8 @@ class TemplateMessageTemplateAdmin(admin.ModelAdmin):
 @admin.register(WechatUser)
 class WechatUserAdmin(admin.ModelAdmin):
     list_display = ['user', 'openid', 'enabled']
+
+
+@admin.register(TemplateMessageTrigger)
+class TemplateMessageTriggerAdmin(admin.ModelAdmin):
+    list_display = ['id', 'template', 'type', 'first', 'remark']
