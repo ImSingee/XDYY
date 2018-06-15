@@ -387,6 +387,10 @@ def init_wechat():
 @init_wp
 def init_trigger():
     from wechat.models import TemplateMessageTrigger, TemplateMessageTemplate
+    from wechat.utils import save_template_info
+
+    # 刷新模板消息缓存
+    save_template_info()
 
     with open(os.path.join(BASE_DIR, 'init_data', 'template_trigger.json'), 'r', encoding='utf-8') as f:
         triggers = json.load(f)
