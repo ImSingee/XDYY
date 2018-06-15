@@ -103,3 +103,25 @@ def get_bind_qrcode(user_obj):
 
     ticket = res['ticket']
     return 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + quote(ticket)
+
+
+def set_menu():
+    """
+    仅用于一次性使用
+    :return:
+    """
+
+    return client.menu.create({
+        "button": [
+            {
+                "type": "view",
+                "name": "辅导员有约",
+                "url": "https://kk.singee.site/"
+            },
+            {
+                "type": "view",
+                "name": "学导有约",
+                "url": "https://vv.singee.site/"
+            }
+        ]
+    })
