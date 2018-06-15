@@ -17,6 +17,8 @@ class Menu(models.Model):
     pattern = models.CharField(verbose_name='菜单相对名称', max_length=150, blank=True, null=True)
     path = models.CharField(verbose_name='菜单相对路径', max_length=150, blank=True, null=True)
 
+    auth = models.CharField(verbose_name='权限', max_length=128, blank=True, null=True)
+
     parent = models.ForeignKey('self', related_name='children', on_delete=models.SET_NULL, blank=True, null=True,
                                verbose_name='父菜单')
 

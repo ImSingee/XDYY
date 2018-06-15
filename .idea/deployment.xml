@@ -12,7 +12,6 @@
             <excludedPath local="true" path="$PROJECT_DIR$/.idea" />
             <excludedPath local="true" path="$PROJECT_DIR$/media/export" />
             <excludedPath local="true" path="$PROJECT_DIR$/media/avatars" />
-            <excludedPath local="true" path="$PROJECT_DIR$/XDYY/settings.py" />
             <excludedPath local="true" path="$PROJECT_DIR$/media" />
           </excludedPaths>
         </serverdata>

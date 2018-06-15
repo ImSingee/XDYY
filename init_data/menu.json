@@ -12,7 +12,7 @@
     "icon_name": "thumb-tack",
     "pattern": "",
     "order": 2,
-    "auth": null,
+    "auth": "is_reserver",
     "children": [
       {
         "name": "正在进行",
@@ -37,7 +37,7 @@
     "icon_name": "cog",
     "pattern": "",
     "order": 3,
-    "auth": null,
+    "auth": "is_reservee",
     "children": [
       {
         "name": "等待确认",
@@ -79,15 +79,15 @@
       {
         "name": "可预约时间设置",
         "icon_name": "",
-        "pattern": "",
+        "pattern": "reserve:can_reserve_time_settings",
         "order": 12,
         "auth": null,
         "children": []
       },
       {
-        "name": "重复预约时间设置",
+        "name": "循环可预约时间设置",
         "icon_name": "",
-        "pattern": "",
+        "pattern": "reserve:can_reserve_time_repeat_settings",
         "order": 13,
         "auth": null,
         "children": []
@@ -99,7 +99,7 @@
     "icon_name": "cog",
     "pattern": "",
     "order": 4,
-    "auth": null,
+    "auth": "is_staff",
     "children": [
       {
         "name": "管理后台",

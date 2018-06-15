@@ -3,7 +3,7 @@
 {% block content_titlle_small %}{{ title_small }}{% endblock %}
 {% block head %}
     {% load static from staticfiles %}
-    <link href="{% static 'css/plugins/iCheck/custom.css' %}" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/iCheck/1.0.1/skins/square/green.css" rel="stylesheet">
 {% endblock %}
 {% block content_content_width %}12{% endblock %}
 {% block content_content_content_width %}12{% endblock %}
@@ -13,7 +13,7 @@
         {% if rrzs %}
             <ul class="sortable-list connectList agile-list reserve_result">
                 {% for rr,rri in rrzs %}
-                    <li class="info-element col-sm-6">
+                    <li class="{{ rri.color }}-element col-sm-6">
                         <div class="agile-detail">
                             {#                            <a href="#" class="pull-right btn btn-xs btn-white">标签</a>#}
                             <div class="pull-right">{{ rr.id }}#</div>
@@ -81,12 +81,15 @@
                             {% if rr.is_submited %}
                                 <a href="#confirm-form" data-id="{{ rr.id }}" class="btn btn-sm btn-success"
                                    data-toggle="modal">确认预约</a>
-                                <a href="#xx-form" class="btn btn-sm btn-danger" data-toggle="modal">拒绝预约</a>
+                                <a href="#reject-form" data-id="{{ rr.id }}" class="btn btn-sm btn-danger"
+                                   data-toggle="modal">拒绝预约</a>
                             {% elif rr.is_confirmed %}
                                 <a href="#complete-form" data-id="{{ rr.id }}" class="btn btn-sm btn-success"
                                    data-toggle="modal">确认完成预约</a>
-                                <a href="#xx-form" class="btn btn-sm btn-danger" data-toggle="modal">预约人未出席</a>
-                                <a href="#xx-form" class="btn btn-sm btn-danger" data-toggle="modal">取消预约</a>
+                                <a href="#xx-form" data-id="{{ rr.id }}" class="btn btn-sm btn-danger"
+                                   data-toggle="modal">预约人未出席</a>
+                                <a href="#xx-form" data-id="{{ rr.id }}" class="btn btn-sm btn-danger"
+                                   data-toggle="modal">取消预约</a>
                             {% elif rr.is_completed %}
                                 {% if not rr.reservee_marked %}
                                     <a href="#rank-form" data-id="{{ rr.id }}" class="btn btn-sm btn-white"
@@ -115,6 +118,13 @@
             $.get("{% url 'reserve:confirm_reserve' %}?id=" + choose_id, function (result) {
                 modal.find('.form').html(result);
             });
+        });
+        $('#reject-form').on('show.bs.modal', function (event) {
+            console.log('reject-form');
+            target = $(event.relatedTarget);
+            choose_id = target.data('id');
+            modal = $(this);
+            modal.find('[name=id]').val(choose_id);
         });
         $('#complete-form').on('show.bs.modal', function (event) {
             target = $(event.relatedTarget);
@@ -191,7 +201,7 @@
 
         function click(param) {
             check = param;//记录当前打分
-            $('#mark').val(check)
+            $('#mark').val(check);
             out();//设置星星数
         }
 
@@ -268,6 +278,28 @@
                                 </div>
                                 <div>
                                     <button type="submit" class="btn btn-sm btn-success m-t-n-xs">提交评价</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="reject-form" class="modal fade" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h3 class="m-t-none m-b">确认拒绝预约？</h3>
+                            <p>拒绝预约应在您可选择的时间、地点确实不合适的情况下进行，并建议您预先与预约人联系，告知其拒绝的原因与后续的处理方案。</p>
+                            <form method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="type" value="reject">
+                                <input type="hidden" name="id" value="">
+                                <div>
+                                    <button type="submit" class="btn btn-sm btn-danger m-t-n-xs">确认拒绝预约</button>
                                 </div>
                             </form>
                         </div>

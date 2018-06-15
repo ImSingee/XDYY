@@ -1,0 +1,315 @@
+{% extends 'base.html' %}
+{% load static from staticfiles %}
+{% block head %}
+    {#    <link href="{% static 'css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css' %}" rel="stylesheet">#}
+    {#    <link href="{% static 'css/plugins/chosen/chosen.css' %}" rel="stylesheet">#}
+    <link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.css">
+{% endblock head %}
+{% block content %}
+    <div class="ibox float-e-margins col-sm-6  border-bottom">
+        <div class="ibox-title">
+            <h5>新增循环可预约时间</h5>
+            <div class="ibox-tools">
+                <a class="collapse-link">
+                    <i class="fa fa-chevron-down"></i>
+                </a>
+            </div>
+        </div>
+        <div class="ibox-content" style="display: none;">
+            <div class="row">
+                <div class="col-sm-12">
+                    此处用于添加自动循环的可预约时间，如需添加一次有效的可预约时间请在「可预约时间设置」中修改。
+                    <form class="form-horizontal m-t" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="type" value="new">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" for="repeat">循环条件</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="repeat" class="form-control" name="repeat">
+                                <span class="help-block m-b-none">为 1-7 之间的数字，代表每周星期几，中间使用半角逗号分隔<br>例如「周一、周三」则填写「1,3」</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" for="startTime">开始时间</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="startTime" class="form-control" name="start_time">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" for="endTime">结束时间</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="endTime" class="form-control" name="end_time">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" for="max">最多可预约人数</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="max" class="form-control" name="max" required value="2">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" for="loopStartDate">循环开始日期</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="loopStartDate" class="form-control" name="loop_start" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" for="loopEndDate">循环结束日期</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="loopEndDate" class="form-control" name="loop_end">
+                                <span class="help-block m-b-none">留空表示不结束</span>
+                            </div>
+                        </div>
+                        <div>
+                            <button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="submit">
+                                <strong>提交</strong>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="ibox float-e-margins col-sm-12">
+        <div class="ibox-title">
+            <h5>已有可预约时间信息</h5>
+        </div>
+        <div class="ibox-content">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h3 class="m-t-none m-b">已有循环可预约时间</h3>
+                    {#                <p>循环条件含义：略</p>#}
+
+                    <table data-toggle="table" data-pagination="true" data-page-size="30" {# data-show-columns="true" #}
+                           data-pagination-h-align="left" data-pagination-detail-h-align="right">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>循环条件（每周）</th>
+                            <th>开始时间</th>
+                            <th>结束时间</th>
+                            <th>最多可预约人数</th>
+                            <th>循环开始日期</th>
+                            <th>循环结束日期</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for d in data %}
+                            <tr data-id="{{ d.id }}">
+                                <td>{{ forloop.counter }}</td>
+                                <td class="x-repeat">{{ d.repeat }}</td>
+                                <td class="x-start_time">{{ d.start_time | time:"h:i" }}</td>
+                                <td class="x-end_time">{{ d.end_time | time:"h:i" }}</td>
+                                <td class="x-max">{{ d.max }}</td>
+                                <td class="x-loop_start">{{ d.loop_start | date:'Y-m-d' }}</td>
+                                <td class="x-loop_end">
+                                    {% if d.loop_end %}{{ d.loop_end | date:'Y-m-d' }}{% else %}无{% endif %}</td>
+                                <td><a data-toggle="modal" href="#edit-form"><i class="fa fa-edit"></i></a>
+                                    <a data-toggle="modal" href="#disable-form"><i class="fa fa-remove"></i></a></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+{% block js %}
+    <script src="https://cdnjs.loli.net/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.js"></script>
+    <script src="https://cdnjs.loli.net/ajax/libs/bootstrap-table/1.12.1/locale/bootstrap-table-zh-CN.js"></script>
+    <script src="{% static 'laydate/laydate.js' %}"></script>
+    {#    <script src="{% static 'js/plugins/chosen/chosen.jquery.js' %}"></script>#}
+    <script>
+        {#        $('.chosen-select').chosen()#}
+
+        laydate.render({
+            elem: '#startTime',
+            format: 'HH:mm',
+            type: 'time'
+        });
+        laydate.render({
+            elem: '#endTime',
+            format: 'HH:mm',
+            type: 'time'
+        });
+        laydate.render({
+            elem: '#loopStartDate',
+            min: 0
+        });
+        laydate.render({
+            elem: '#loopEndDate',
+            min: 0
+        });
+        laydate.render({
+            elem: '#newLoopStartDate',
+            min: 0
+        });
+        laydate.render({
+            elem: '#newLoopEndDate',
+            min: 0
+        });
+
+        $('#disable-form').on('show.bs.modal', function (event) {
+            target = $(event.relatedTarget);
+            id = target.parent().parent().data('id');
+            {#date = target.parent().parent().find('.x-date').text();#}
+            {#start_time = target.parent().parent().find('.x-start_time').text();#}
+            {#end_time = target.parent().parent().find('.x-end_time').text();#}
+            {#abstract = date + ' ' + start_time + ' - ' + end_time;#}
+            modal = $(this);
+            modal.find('[name=id]').val(id);
+            {#modal.find('[name=abstract]').text(abstract);#}
+        });
+
+        $('#edit-form').on('show.bs.modal', function (event) {
+            target = $(event.relatedTarget);
+            id = target.parent().parent().data('id');
+
+            oldRepeat = target.parent().parent().find('.x-repeat').text().trim();
+            oldStartTime = target.parent().parent().find('.x-start_time').text().trim();
+            oldEndTime = target.parent().parent().find('.x-end_time').text().trim();
+            oldMax = target.parent().parent().find('.x-max').text().trim();
+            oldLoopStart = target.parent().parent().find('.x-loop_start').text().trim();
+            oldLoopEnd = target.parent().parent().find('.x-loop_end').text().trim();
+
+            modal = $(this);
+            modal.find('[name=id]').val(id);
+
+            modal.find('#newRepeat').val(oldRepeat);
+            modal.find('#newMax').val(oldMax);
+            modal.find('#oldStartTime').val(oldStartTime);
+            modal.find('#oldEndTime').val(oldEndTime);
+            modal.find('#newLoopStartDate').val(oldLoopStart);
+            if (oldLoopEnd !== '无') {
+                modal.find('#newLoopEndDate').val(oldLoopEnd);
+            }
+        })
+    </script>
+{% endblock js %}
+{% block foot %}
+    <div id="disable-form" class="modal fade" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h3 class="m-t-none m-b">删除此自动循环时间段</h3>
+                            <p>说明：</p>
+                            <ol>
+                                <li>删除自动循环可预约时间段的操作不可逆</li>
+                                <li>删除自动循环可预约时间段并不会影响已生成的可预约时间段</li>
+                                <li>删除后此自动循环时间段不会再在此列表中显示</li>
+                            </ol>
+                            <form method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="id" value="">
+                                <input type="hidden" name="type" value="disable">
+                                <div>
+                                    <button type="submit" class="btn btn-sm btn-danger m-t-n-xs">确认禁用此循环时间段</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="edit-form" class="modal fade" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h3 class="m-t-none m-b">修改循环可预约时间段信息</h3>
+                            <p>说明：</p>
+                            <ol>
+                                <li>循环的开始与结束时间无法改变（如确需改变请先删除本时间段再添加新的）</li>
+                                <li>对此循环时间段的修改并不会影响已生成的可预约时间段</li>
+                            </ol>
+
+                            <form class="form-horizontal m-t" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="id" value="">
+                                <input type="hidden" name="type" value="edit">
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="newRepeat">循环条件</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="newRepeat" class="form-control" name="repeat">
+                                        <span class="help-block m-b-none">为 1-7 之间的数字，代表每周星期几，中间使用半角逗号分隔<br>例如「周一、周三」则填写「1,3」</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="oldStartTime">开始时间</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="oldStartTime" class="form-control" disabled>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="oldEndTime">结束时间</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="oldEndTime" class="form-control" disabled>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="newMax">最多可预约人数</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="newMax" class="form-control" name="max" required
+                                               value="2">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="newLoopStartDate">循环开始日期</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="newLoopStartDate" class="form-control" name="loop_start"
+                                               required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="newLoopEndDate">循环结束日期</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="newLoopEndDate" class="form-control" name="loop_end">
+                                        <span class="help-block m-b-none">留空表示不结束</span>
+                                    </div>
+                                </div>
+
+
+                                {##}
+                                {#                                <div class="form-group">#}
+                                {#                                    <label class="col-sm-3 control-label" for="ed">已预约人数</label>#}
+                                {#                                    <div class="col-sm-8">#}
+                                {#                                        <input type="text" id="ed" class="form-control" disabled>#}
+                                {#                                    </div>#}
+                                {#                                </div>#}
+                                {##}
+                                {#                                <div class="form-group">#}
+                                {#                                    <label class="col-sm-3 control-label" for="oldMax">原可预约人数</label>#}
+                                {#                                    <div class="col-sm-8">#}
+                                {#                                        <input type="text" id="oldMax" class="form-control" disabled>#}
+                                {#                                    </div>#}
+                                {#                                </div>#}
+                                {##}
+                                {#                                <div class="form-group">#}
+                                {#                                    <label class="col-sm-3 control-label" for="newMax">新的可预约人数</label>#}
+                                {#                                    <div class="col-sm-8">#}
+                                {#                                        <input type="number" id="newMax" class="form-control" name="max">#}
+                                {#                                    </div>#}
+                                {#                                </div>#}
+
+                                <div>
+                                    <button type="submit" class="btn btn-sm btn-success m-t-n-xs">确认修改</button>
+                                </div>
+
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock foot %}

@@ -24,12 +24,13 @@
     </div>
 </form>
 {% load static from staticfiles %}
-<script src="{% static 'js/plugins/iCheck/icheck.min.js' %}"></script>
+<script src="https://cdn.bootcss.com/iCheck/1.0.2/icheck.min.js"></script>
+<script src="{% static 'js/plugins/iCheck/icheck.2.min.js' %}"></script>
 <script>
     $(document).ready(function () {
         $('.i-checks').iCheck({
             checkboxClass: 'icheckbox_square-green',
-            radioClass: 'iradio_square-green',
+            radioClass: 'iradio_square-green'
         });
     });
 </script>

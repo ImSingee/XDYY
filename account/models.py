@@ -1,7 +1,8 @@
 import os
-from django.db import models
-from django.conf import settings
+
 from django.contrib.auth.models import AbstractUser
+from django.db import models
+
 from reserve.models import ReserveRecord
 
 
@@ -49,11 +50,14 @@ class User(AbstractUser):
             if not os.path.isfile(self.avatar.path):
                 return
             from PIL import Image
-            with Image.open(self.avatar.path) as im:
-                x, y = im.size
-                size = (100, 100)
-                im.thumbnail((120, 120 * y / x), resample=Image.LANCZOS)
-                im.save(self.avatar.path)
+            try:
+                with Image.open(self.avatar.path) as im:
+                    x, y = im.size
+                    size = (100, 100)
+                    im.thumbnail((120, 120 * y / x), resample=Image.LANCZOS)
+                    im.save(self.avatar.path)
+            except OSError:
+                pass
 
     def get_role(self):
         if self.is_superuser:

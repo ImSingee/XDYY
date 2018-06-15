@@ -10,8 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
-import os
 import configparser
+import os
+
 from django.contrib.messages import constants as messages
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -29,7 +30,7 @@ DEBUG = True
 # LOGIN_REDIRECT_URL = ''
 
 # ConfigFile
-CONFIG_DIR = os.path.join(BASE_DIR, "config_dev.ini" if DEBUG else 'config.ini')
+CONFIG_DIR = os.path.join(BASE_DIR, 'config.ini')
 cf = configparser.ConfigParser()
 cf.read(CONFIG_DIR, encoding='utf-8')
 
@@ -50,9 +51,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.forms',
+
     'django_extensions',
     'hijack',
     'compat',
+    'guardian',
+
     'main.apps.MainConfig',
     'account.apps.AccountConfig',
     'dashboard.apps.DashboardConfig',
@@ -88,6 +92,11 @@ TEMPLATES = [
         },
     },
 ]
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',  # this is default
+    'guardian.backends.ObjectPermissionBackend',
+)
 
 WSGI_APPLICATION = 'XDYY.wsgi.application'
 

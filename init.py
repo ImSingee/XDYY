@@ -1,21 +1,21 @@
+import json
 import os
 import shutil
-import json
+
 from django.conf import settings
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, Permission
 
-from dashboard.models import Menu
 from account.models import User, UserInfo
-from reserve.models import ReserveType, RepeatReserveTime,ReservePlace
-
-from main.utils import Success, Error
 from account.utils import UserSettings
+from dashboard.models import Menu
+from main.utils import Success, Error
+from reserve.models import ReserveType, RepeatReserveTime, ReservePlace, ReserveTime
 
 BASE_DIR = settings.BASE_DIR
 
 
 def init_dir():
-    paths = ['media/export', 'media/avatars']
+    paths = ['media', 'media/export', 'media/avatars']
     paths = [os.path.join(BASE_DIR, x) for x in paths]
 
     for t in paths:
@@ -24,9 +24,35 @@ def init_dir():
 
 
 def init_group():
-    Group(id=1, name='管理员').save()
-    Group(id=2, name='学导').save()
-    Group(id=3, name='学生').save()
+    g1 = Group(id=1, name='管理员')
+    g1.save()
+    g2 = Group(id=2, name='学导')
+    g2.save()
+    g3 = Group(id=3, name='学生')
+    g3.save()
+
+
+def init_permission():
+    g1 = Group.objects.get(id=1)  # 管理员
+    g2 = Group.objects.get(id=2)  # 学导
+    g3 = Group.objects.get(id=3)  # 学生
+
+    # 管理员
+    g1.permissions.add(Permission.objects.get(content_type__model='reserverecord', codename='confirm'))
+    g1.permissions.add(Permission.objects.get(content_type__model='reserverecord', codename='reject_reserverecord'))
+    g1.permissions.add(Permission.objects.get(content_type__model='reservetime', codename='disable'))
+    g1.permissions.add(Permission.objects.get(content_type__model='reservetime', codename='edit_max'))
+    g1.permissions.add(Permission.objects.get(content_type__model='reservetime', codename='change_reservetime'))
+    g1.permissions.add(
+        Permission.objects.get(content_type__model='repeatreservetime', codename='change_repeatreservetime'))
+
+    # 学导
+    g2.permissions.add(Permission.objects.get(content_type__model='reservetime', codename='add_reservetime'))
+    g2.permissions.add(
+        Permission.objects.get(content_type__model='repeatreservetime', codename='add_repeatreservetime'))
+
+    # 学生
+    g3.permissions.add(Permission.objects.get(content_type__model='reserverecord', codename='new'))
 
 
 def init_superuser():
@@ -74,15 +100,11 @@ def init_menu():
         else:
             children = []
 
-        # 忽略 auth
-        if 'auth' in j: j.pop('auth')
         m = Menu(**j)
         m.save()
         for child in children:
             if 'children' in child:
                 child.pop('children')
-            # 忽略 auth
-            if 'auth' in child: child.pop('auth')
             # 忽略二级菜单 icon
             if 'icon' in child: child.pop('icon')
             if 'icon_name' in child: child.pop('icon_name')
@@ -102,6 +124,12 @@ def init_type():
 
 def init_student():
     import xlrd
+    import threading
+    import queue
+    import time
+
+    User.objects.filter(groups__id=3).delete()
+
     data = xlrd.open_workbook(os.path.join(BASE_DIR, 'init_data', 'secret', 'student.xlsx'))
     table = data.sheets()[0]
     nrows = table.nrows
@@ -151,18 +179,36 @@ def init_student():
             print('<Student {}l#> Xls format error'.format(i))
             continue
 
-    def add(student):
-        student = dict(student)
+    start_time = time.time()
 
-        ret = UserSettings().create_student(**student)
-        print(ret)
-        return ret
+    d = queue.Queue(len(students))
 
-    print(students)
+    for student in students:
+        d.put(student)
 
-    rets = [add(x) for x in students]
-    for ret in rets:
-        pass
+    class AddStudentThread(threading.Thread):
+        def run(self):
+            try:
+                while True:
+                    student = dict(d.get(False))
+                    ret = UserSettings().create_student(**student)
+                    print(ret)
+
+            except queue.Empty:
+                print('Thread end')
+                return
+
+    threads = []
+    for i in range(30):
+        t = AddStudentThread()
+        t.start()
+        threads.append(t)
+
+    [t.join() for t in threads]
+
+    end_time = time.time()
+
+    print(end_time - start_time)
 
     print('Complete Init Students')
 
@@ -268,10 +314,19 @@ def init_xuedao():
 
 def init_xuedao_time():
     RepeatReserveTime.objects.all().delete()
+    ReserveTime.objects.all().delete()
+
     us = User.objects.filter(userinfo__reservee=True, is_active=True)
     for u in us:
         rrt = RepeatReserveTime(reservee=u, start_time='08:20', end_time='09:55', repeat=(1, 2, 3, 4, 5))
         rrt.save()
+
+
+def init_xuedao_type():
+    us = User.objects.filter(userinfo__reservee=True)
+    ta = ReserveType.objects.filter(enabled=True, type=1)
+    for u in us:
+        u.userinfo.can_reserve_type.set(ta)
 
 
 def init_gender():
@@ -301,6 +356,7 @@ def init():
     init_type()
     # migrate account
     init_group()
+    init_permission()
     init_superuser()
     init_admin()
     # student & xuedao
@@ -308,15 +364,25 @@ def init():
     init_xuedao()
     init_gender()
 
+
 def init_test():
     init()
     init_xuedao_time()
     init_reserve_place()
+    init_xuedao_type()
 
 
 def init_minimal():
     init_dir()
     init_global()
+
+
+def init_passauth():
+    us = User.objects.all()
+    for u in us:
+        print('{}/{}'.format(u.id, len(us)))
+        u.set_password('123456')
+        u.save()
 
 
 if __name__ == '__main__':

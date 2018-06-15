@@ -21,22 +21,32 @@ class IndexView(TemplateView):
     template_name = 'dashboard/index.html'
 
     def get(self, request, *args, **kwargs):
-        index = request.GET.get('index', reverse('dashboard:indexR'))
-        self.extra_context.update({'index': index})
-        return super().get(request, *args, **kwargs)
-
-    def __init__(self, *args, **kwargs):
         from .models import Menu
-        super().__init__(*args, **kwargs)
-        menus = list(Menu.objects.all())
+
+        menus = list(Menu.objects.filter(show=True))
         ms = []
+
         for menu in menus:
             if menu.top:
-                ms.append(menu)
-        ms = [x for x in ms if x.show]
+                if not menu.auth:
+                    ms.append(menu)
+                else:
+                    if menu.auth == 'is_staff':
+                        if request.user.is_staff:
+                            ms.append(menu)
+                    elif menu.auth == 'is_reserver':
+                        if request.user.is_authenticated and request.user.userinfo.reserver:
+                            ms.append(menu)
+                    elif menu.auth == 'is_reservee':
+                        if request.user.is_authenticated and request.user.userinfo.reservee:
+                            ms.append(menu)
+
         ms.sort(key=lambda x: x.order)
         for m in ms:
             if not m.single:
                 setattr(m, 'child', [x for x in m.children.all() if x.show])
                 m.child.sort(key=lambda x: x.order)
         self.extra_context = {'menu': ms}
+        index = request.GET.get('index', reverse('dashboard:indexR'))
+        self.extra_context.update({'index': index})
+        return super().get(request, *args, **kwargs)

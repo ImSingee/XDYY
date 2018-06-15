@@ -10,7 +10,7 @@
             <ul class="sortable-list connectList agile-list reserve_result">
                 {% for rr,rri in rrzs %}
                     {#                <div class="">#}
-                    <li class="info-element col-sm-6">
+                    <li class="{{ rri.color }}-element col-sm-6">
                         <div class="agile-detail">
                             {#                            <a href="#" class="pull-right btn btn-xs btn-white">标签</a>#}
                             <div class="pull-right">{{ rr.id }}#</div>
@@ -169,7 +169,7 @@
 
         function click(param) {
             check = param;//记录当前打分
-            $('#mark').val(check)
+            $('#mark').val(check);
             out();//设置星星数
         }
     </script>

@@ -1,9 +1,8 @@
 from django import forms
 from django.forms import CharField, ValidationError
-from django.forms.renderers import TemplatesSetting
 
 from account.models import UserInfo, User
-from .models import ReserveType
+from .models import ReserveType, ReserveTime, RepeatReserveTime
 
 
 class CharFieldC(CharField):
@@ -45,7 +44,7 @@ class UserAuthForm(forms.Form):
         ui = UserInfo.objects.filter(reserver=True, auth_code=auth_code, auth_name=auth_name, user__is_active=True)
         if not ui.exists():
             raise ValidationError('学号和姓名不匹配', code='auth_code_not_exist')
-        if False:  # TODO - 校验权限（用户是否有权进行预约）
+        if not ui.first().user.has_perm('reserve.new'):
             raise ValidationError('该用户无权进行预约', code='auth_code_not_exist')
 
 
@@ -102,3 +101,15 @@ class ReserveeSettingsForm(forms.ModelForm):
         help_texts = {
             'can_reserve_type': '在电脑上设置时可以搜索',
         }
+
+
+class NewCanReserveTime(forms.ModelForm):
+    class Meta:
+        model = ReserveTime
+        fields = ['date', 'start_time', 'end_time', 'max', 'reservee']
+
+
+class NewCanReserveRepeatTime(forms.ModelForm):
+    class Meta:
+        model = RepeatReserveTime
+        fields = ['repeat', 'start_time', 'end_time', 'max', 'reservee', 'loop_start', 'loop_end']

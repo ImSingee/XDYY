@@ -32,14 +32,16 @@
                 <div class="col-xs-12"><i class="fa fa-clock-o"></i>
                     {% with rr.main_time as t %}{% include 'base/period.html' %}{% endwith %}</div>
             </div>
-            <div class="row">
-                <div class="col-xs-12"><b>备选时间</b></div>
-                <div class="col-xs-12">
-                    {% for t in rri.extra_time %}
-                        <i class="fa fa-clock-o"></i> {% include 'base/period.html' %}<br>
-                    {% endfor %}
+            {% if rri.extra_time %}
+                <div class="row">
+                    <div class="col-xs-12"><b>备选时间</b></div>
+                    <div class="col-xs-12">
+                        {% for t in rri.extra_time %}
+                            <i class="fa fa-clock-o"></i> {% include 'base/period.html' %}<br>
+                        {% endfor %}
+                    </div>
                 </div>
-            </div>
+            {% endif %}
             {#            <div class="agile-detail">#}
             {#                <a href="#" class="pull-right btn btn-xs btn-white">修改预约信息</a>#}
             {#                <br>#}

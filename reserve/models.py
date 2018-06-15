@@ -1,5 +1,8 @@
-from django.db import models
+from datetime import date
+
 from django.contrib.postgres.fields import ArrayField
+from django.db import models
+from django.db.utils import IntegrityError
 
 
 class ReserveType(models.Model):
@@ -11,7 +14,7 @@ class ReserveType(models.Model):
     hot = models.BooleanField(verbose_name='热搜', default=False, help_text='本功能暂时无效')
     order = models.IntegerField(verbose_name='排序', default=999)
 
-    type = models.IntegerField(verbose_name='类别', choices=TYPE_CHOICES, default=2)
+    type = models.IntegerField(verbose_name='类别', choices=TYPE_CHOICES, default=1)
     enabled = models.BooleanField(verbose_name='启用', default=True)
 
     def __str__(self):
@@ -57,6 +60,11 @@ class ReserveTime(models.Model):
         verbose_name = '可预约时间'
         verbose_name_plural = verbose_name
 
+        permissions = (
+            ('disable', '禁用时间'),
+            ('edit_max', '修改最大可预约人数'),
+        )
+
 
 class RepeatReserveTime(models.Model):
     reservee = models.ForeignKey('account.User', on_delete=models.SET_NULL, null=True, blank=True, verbose_name='被预约人',
@@ -88,6 +96,9 @@ class RepeatReserveTime(models.Model):
 
     max = models.IntegerField(verbose_name='最大可预约人数', default=2)
 
+    loop_start = models.DateField(verbose_name='循环开始日期', default=date.today)
+    loop_end = models.DateField(verbose_name='循环结束日期', blank=True, null=True)
+
     add_user = models.ForeignKey('account.User', on_delete=models.SET_NULL, null=True, editable=False, blank=True,
                                  related_name='+', verbose_name='添加人')
 
@@ -96,11 +107,32 @@ class RepeatReserveTime(models.Model):
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
+
+        if type(self.repeat) is str:
+            repeat = str(self.repeat).replace('，', ',').strip()
+
+            if repeat[0] == '[' and repeat[-1] == ']':
+                repeat = repeat[1:-1]
+
+            t_repeat = []
+
+            for r in repeat.split(','):
+                try:
+                    t_repeat.append(int(r.strip()))
+                except ValueError as e:
+                    raise IntegrityError(e)
+
+            self.repeat = t_repeat
+
         super().save(force_insert, force_update, using, update_fields)
 
     class Meta:
         verbose_name = '可预约时间（重复）'
         verbose_name_plural = verbose_name
+        permissions = (
+            ('disable_repeatreservetime', '可禁用可预约时间（重复）'),
+
+        )
 
 
 class ReserveRecord(models.Model):
@@ -219,6 +251,11 @@ class ReserveRecord(models.Model):
     class Meta:
         verbose_name = '预约记录'
         verbose_name_plural = verbose_name
+        permissions = (
+            ('new', '预约他人'),
+            ('confirm', '确认预约'),
+            ('reject_reserverecord', '拒绝预约'),
+        )
 
 
 class ReservePlace(models.Model):
