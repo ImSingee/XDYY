@@ -34,6 +34,9 @@ class IndexView(TemplateView):
                     if menu.auth == 'is_staff':
                         if request.user.is_staff:
                             ms.append(menu)
+                    elif menu.auth == 'is_authenticated':
+                        if request.user.is_authenticated:
+                            ms.append(menu)
                     elif menu.auth == 'is_reserver':
                         if request.user.is_authenticated and request.user.userinfo.reserver:
                             ms.append(menu)

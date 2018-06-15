@@ -70,4 +70,10 @@ class SessionStorage(models.Model):
 
 class WechatUser(models.Model):
     user = models.OneToOneField('account.User', models.CASCADE, related_name='wechat')
-    openid = models.CharField(max_length=1024)
+    openid = models.CharField(max_length=1024, blank=True, default='')
+
+    enabled = models.BooleanField(default=False)
+
+    @property
+    def binded(self):
+        return self.enabled and self.openid

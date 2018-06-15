@@ -53,7 +53,6 @@
         "auth": null,
         "children": []
       },
-
       {
         "name": "已完成",
         "pattern": "reserve:reserve_me;type=completed",
@@ -154,6 +153,23 @@
         "icon_name": "",
         "pattern": "admin:reserve_reservetype_changelist",
         "order": 6,
+        "auth": null,
+        "children": []
+      }
+    ]
+  },
+  {
+    "name": "个人中心",
+    "icon_name": "cog",
+    "pattern": "",
+    "order": 5,
+    "auth": "is_authenticated",
+    "children": [
+      {
+        "name": "绑定微信",
+        "icon_name": "cog",
+        "pattern": "wechat:bind",
+        "order": 0,
         "auth": null,
         "children": []
       }

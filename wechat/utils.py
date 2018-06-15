@@ -20,6 +20,7 @@ def bind_wechat(user_obj, openid):
     """
     wu, _ = WechatUser.objects.get_or_create(user=user_obj)
     wu.openid = openid
+    wu.enabled = True
     wu.save()
     return True
 

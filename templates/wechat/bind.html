@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="ibox float-e-margins col-sm-6">
+        <div class="ibox-title">
+            <h5>微信绑定</h5>
+        </div>
+        <div class="ibox-content">
+            <div class="row">
+                <div class="col-sm-8">
+                    <h3 class="m-t-none m-b">扫描二维码绑定后即可享受提醒服务</h3>
+                    <div>
+                        {% if request.user.wechat.binded %}
+                            您已绑定微信，如需解绑请联系管理员
+                        {% else %}
+                            <img src="{% url 'wechat:bind-image' %}" alt="">
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock content %}

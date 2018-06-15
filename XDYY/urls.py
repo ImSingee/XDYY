@@ -25,6 +25,7 @@ urlpatterns = [
     path('dashboard/', include('dashboard.urls', namespace='dashboard')),
     path('account/', include('account.urls', namespace='account')),
     path('reserve/', include('reserve.urls', namespace='reserve')),
+                  path('wechat/', include('wechat.urls', namespace='wechat')),
 
     path('admin/', admin.site.urls),
     path('refresh/', RefreshView.as_view(), name='refresh'),
