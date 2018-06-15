@@ -422,7 +422,7 @@ class ReserveMeView(LoginRequiredMixin, TemplateView):
     template_name = 'reserve/reserve_me.html'
 
     def get(self, request, type='', **kwargs):
-        if type not in ['submited', 'confirmed', 'completed', 'canceled']:
+        if type not in ['submited', 'confirmed', 'completed', 'canceled', 'absent']:
             return HttpResponseNotFound()
 
         title_small = ''
@@ -443,9 +443,8 @@ class ReserveMeView(LoginRequiredMixin, TemplateView):
         elif type == 'canceled':
             title_small = '已取消'
             condition = title_small
-            query = Q(status__in=(-101, -102, -103, -104, -201))
+            query = Q(status__in=(-101, -102, -103, -104, -105, -201))
 
-        rrs = []
         rrs_o = ReserveRecord.objects.filter(main_time__reservee=request.user).filter(query)
         rrs = list(rrs_o)
         rris = []
@@ -473,7 +472,7 @@ class ReserveMeView(LoginRequiredMixin, TemplateView):
         _type = request.POST.get('type')
         id = request.POST.get('id')
 
-        if _type not in ['confirm', 'complete', 'mark', 'reject']:
+        if _type not in ['confirm', 'complete', 'mark', 'reject', 'cancel', 'absent']:
             messages.error(request, '操作未定义')
             return self.get(request, type=type, **kwargs)
 
@@ -529,6 +528,35 @@ class ReserveMeView(LoginRequiredMixin, TemplateView):
                 r.save()
 
             messages.success(request, '预约拒绝成功')
+            return redirect(reverse('reserve:reserve_me', kwargs={'type': type}))
+
+        if _type == 'cancel':
+
+            if not request.user.has_perm('reserve.cancel_reserverecord', rr):
+                messages.error(request, '您无权取消此预约')
+                return super().get(request, type=type, **kwargs)
+
+            rr.status = -105
+            rr.save()
+
+            # 恢复时间
+            for r in rr.time.all():
+                r.ed -= 1
+                r.save()
+
+            messages.success(request, '预约取消成功')
+            return redirect(reverse('reserve:reserve_me', kwargs={'type': type}))
+
+        if _type == 'absent':
+
+            if not request.user.has_perm('reserve.absent_reserverecord', rr):
+                messages.error(request, '您无权标记此预约为预约人未出席')
+                return super().get(request, type=type, **kwargs)
+
+            rr.status = -201
+            rr.save()
+
+            messages.success(request, '标记预约状态为预约人未出席成功')
             return redirect(reverse('reserve:reserve_me', kwargs={'type': type}))
 
         if _type == 'complete':

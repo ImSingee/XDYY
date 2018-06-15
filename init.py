@@ -40,6 +40,8 @@ def init_permission():
     # 管理员
     g1.permissions.add(Permission.objects.get(content_type__model='reserverecord', codename='confirm'))
     g1.permissions.add(Permission.objects.get(content_type__model='reserverecord', codename='reject_reserverecord'))
+    g1.permissions.add(Permission.objects.get(content_type__model='reserverecord', codename='absent_reserverecord'))
+    g1.permissions.add(Permission.objects.get(content_type__model='reserverecord', codename='cancel_reserverecord'))
     g1.permissions.add(Permission.objects.get(content_type__model='reservetime', codename='disable'))
     g1.permissions.add(Permission.objects.get(content_type__model='reservetime', codename='edit_max'))
     g1.permissions.add(Permission.objects.get(content_type__model='reservetime', codename='change_reservetime'))

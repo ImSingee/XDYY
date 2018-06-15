@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="aliyun" persistUploadOnCheckin="false">
+  <component name="PublishConfigData" autoUpload="Always" serverName="aliyun" uploadOnCheckin="42d50b04-1050-4b4b-8bf5-0b6ae0350400">
     <serverData>
       <paths name="aliyun">
         <serverdata>
@@ -32,6 +32,7 @@
         </serverdata>
       </paths>
     </serverData>
+    <option name="myUploadOnCheckinName" value="aliyun" />
     <option name="myAutoUpload" value="ALWAYS" />
   </component>
 </project>

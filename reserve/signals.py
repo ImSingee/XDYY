@@ -26,6 +26,8 @@ def reserve_record_post_save(sender, instance, created, raw, using, update_field
     if instance.main_time.reservee:
         assign_perm('reserve.confirm', instance.main_time.reservee, instance)
         assign_perm('reserve.reject_reserverecord', instance.main_time.reservee, instance)
+        assign_perm('reserve.absent_reserverecord', instance.main_time.reservee, instance)
+        assign_perm('reserve.cancel_reserverecord', instance.main_time.reservee, instance)
 
 
 # @receiver(pre_save, sender=ReserveTime, dispatch_uid='ReserveTime_pre_save')

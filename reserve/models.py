@@ -144,11 +144,12 @@ class ReserveRecord(models.Model):
     content = models.TextField(verbose_name='内容详情')
 
     STATUS_TYPE = (
-        (-201, '预约人未出席'),
+        (-201, '预约人无故未出席'),
         (-101, '预约人取消预约'),
-        (-102, '被预约人取消预约'),
+        (-102, '被预约人拒绝预约'),
         (-103, '管理员取消预约'),
         (-104, '被预约人超时未答复自动取消预约'),
+        (-105, '被预约人取消预约'),
         (0, '预约已提交'),
         (100, '预约已确认'),
         (200, '预约已完成'),
@@ -255,6 +256,8 @@ class ReserveRecord(models.Model):
             ('new', '预约他人'),
             ('confirm', '确认预约'),
             ('reject_reserverecord', '拒绝预约'),
+            ('absent_reserverecord', '标记为预约人未出席'),
+            ('cancel_reserverecord', '取消预约'),
         )
 
 

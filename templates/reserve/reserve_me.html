@@ -86,9 +86,9 @@
                             {% elif rr.is_confirmed %}
                                 <a href="#complete-form" data-id="{{ rr.id }}" class="btn btn-sm btn-success"
                                    data-toggle="modal">确认完成预约</a>
-                                <a href="#xx-form" data-id="{{ rr.id }}" class="btn btn-sm btn-danger"
+                                <a href="#absent-form" data-id="{{ rr.id }}" class="btn btn-sm btn-danger"
                                    data-toggle="modal">预约人未出席</a>
-                                <a href="#xx-form" data-id="{{ rr.id }}" class="btn btn-sm btn-danger"
+                                <a href="#cancel-form" data-id="{{ rr.id }}" class="btn btn-sm btn-danger"
                                    data-toggle="modal">取消预约</a>
                             {% elif rr.is_completed %}
                                 {% if not rr.reservee_marked %}
@@ -121,6 +121,20 @@
         });
         $('#reject-form').on('show.bs.modal', function (event) {
             console.log('reject-form');
+            target = $(event.relatedTarget);
+            choose_id = target.data('id');
+            modal = $(this);
+            modal.find('[name=id]').val(choose_id);
+        });
+        $('#cancel-form').on('show.bs.modal', function (event) {
+            console.log('cancel-form');
+            target = $(event.relatedTarget);
+            choose_id = target.data('id');
+            modal = $(this);
+            modal.find('[name=id]').val(choose_id);
+        });
+        $('#absent-form').on('show.bs.modal', function (event) {
+            console.log('absent-form');
             target = $(event.relatedTarget);
             choose_id = target.data('id');
             modal = $(this);
@@ -308,5 +322,50 @@
             </div>
         </div>
     </div>
+    <div id="cancel-form" class="modal fade" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h3 class="m-t-none m-b">确认取消预约？</h3>
+                            <p>确认后取消预约应当在确认预约的时间确实无法继续履行预约的情况下进行。同时建议先与预约人联系商讨有无其他适合的备选时间。</p>
+                            <form method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="type" value="cancel">
+                                <input type="hidden" name="id" value="">
+                                <div>
+                                    <button type="submit" class="btn btn-sm btn-danger m-t-n-xs">确认取消预约</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="absent-form" class="modal fade" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h3 class="m-t-none m-b">确认标记为预约故无辜未出席？</h3>
+                            <p>此操作会记录预约人违约一次，仅应当在预约人不出席且未提前说明原因的情况下使用，请慎重操作。</p>
+                            <form method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="type" value="absent">
+                                <input type="hidden" name="id" value="">
+                                <div>
+                                    <button type="submit" class="btn btn-sm btn-danger m-t-n-xs">确认标记</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock foot %}
 
