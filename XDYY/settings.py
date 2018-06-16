@@ -25,7 +25,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'ca1$_+fr@3yl(t(sn*e5%d=g3_8tm+*nko#j*1_$ug!%1x(nn4'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True if os.environ.get('DEBUG') == 'True' else False
 
 # LOGIN_REDIRECT_URL = ''
 
@@ -155,9 +155,15 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 LOGIN_URL = 'account:login'
 LOGIN_REDIRECT_URL = '/'
+
+if not DEBUG:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+else:
+    STATICFILES_DIRS = (
+        "static/",
+    )
 
 # MediaFiles
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

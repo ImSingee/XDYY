@@ -233,103 +233,86 @@ def init_student():
 
 @init_wp
 def init_xuedao():
-    # import xlrd
-    # data = xlrd.open_workbook(os.path.join(BASE_DIR, 'init_data', 'secret', 'xuedao20180319.xlsx'))
-    # table = data.sheets()[0]
-    # nrows = table.nrows
-    #
-    # xuedaos = []
-    #
-    # for i in range(1, nrows + 1):
-    #     # 序号 姓名 学号 专业	班级	用户名（改成小写）	 邮箱	手机号	简介
-    #     try:
-    #         name = table.cell(i, 1).value
-    #         xuehao = table.cell(i, 2).value
-    #         zhuanye = table.cell(i, 3).value
-    #         banji = table.cell(i, 4).value
-    #         username = str(table.cell(i, 5).value).lower()
-    #         email = table.cell(i, 6).value
-    #         tel = table.cell(i, 7).value
-    #         intro = table.cell(i, 8).value
-    #
-    #         short_intro = zhuanye
-    #
-    #         try:
-    #             tel = str(int(tel)) if tel != '' else None
-    #         except ValueError:
-    #             print('<Xuedao {}l-{}#> Tel is not Integer, Set Blank'.format(i, name))
-    #             tel = ''
-    #
-    #         password = username.capitalize() + str(tel)[-4:]
-    #
-    #         xuedaos.append({
-    #             'xuehao': xuehao,
-    #             'name': name,
-    #             'username': username,
-    #             'password': password,
-    #             'tel': tel,
-    #             'short_intro': short_intro,
-    #             'intro': intro,
-    #             'zhuanye': zhuanye,
-    #             'banji': banji,
-    #         })
-    #
-    #     except:
-    #         print('<Xuedao {}l#> Xls format error'.format(i))
-    #         continue
-    #
-    # def add(xuedao):
-    #     xuedao = dict(xuedao)
-    #     xuedao.setdefault('reservee', True)
-    #     xuedao.setdefault('can_reserved', True)
-    #     name = xuedao.get('name', '')
-    #     xuehao = xuedao.get('xuehao', '')
-    #     u = User.objects.filter(userinfo__auth_code=xuehao, is_active=True)
-    #     if u.exists():
-    #         if len(u) == 1:
-    #             status = Success(e='成功', name=name)
-    #         else:
-    #             status = Error(e='不唯一', name=name)
-    #     else:
-    #         status = Error(e='不存在', name=name)
-    #     if not status:
-    #         return status
-    #
-    #     u = u.first()
-    #     u.tel = xuedao.get('tel', '')
-    #     # 头像处理 - 开始
-    #     avatar_bak_path = os.path.join(BASE_DIR, 'media', 'avatars.bak')
-    #     avatar_path = os.path.join(BASE_DIR, 'media', 'avatars')
-    #     username = xuedao.get('username' '')
-    #     m_paths = ['jpg', 'jpeg', 'png']
-    #     for m in m_paths:
-    #         if os.path.isfile(os.path.join(avatar_bak_path, '{}.{}'.format(username, m))):
-    #             shutil.copyfile(os.path.join(avatar_bak_path, '{}.{}'.format(username, m)),
-    #                             os.path.join(avatar_path, '{}.{}'.format(username, m)))
-    #             u.avatar = "avatars/{}.{}".format(username, m)
-    #             u.save()
-    #             break
-    #     # 头像处理 - 结束
-    #     u.save()
-    #     ui = u.userinfo
-    #     user_info_fields = [x.name for x in UserInfo._meta.get_fields()]
-    #     for k, v in xuedao.items():
-    #         if k in user_info_fields:
-    #             setattr(ui, k, v)
-    #     ui.save()
-    #     UserSettings().add_group(user_obj=u, id=2)  # reservee
-    #     # ret = utils.create_user(**xuedao)
-    #
-    #     return status
-    #
-    # # print(xuedaos)
-    #
-    # results = [add(x) for x in xuedaos]
-    # for r in results:
-    #     print('{} - {}'.format(r.name, r.e))
-    #
-    # print('Complete Init Xuedaos')
-    print('Pause Init Xuedaos')
+    from openpyxl import load_workbook
+    wb = load_workbook(os.path.join(BASE_DIR, 'init_data', 'secret', 'xuedao_20180616.xlsx'))
+    ws = wb['UP']
+
+    xuedaos = []
+
+    for row in ws.rows:
+        # 序号 姓名 学号 专业	班级	用户名（改成小写）	 邮箱	手机号	简介
+        try:
+            id = row[0].value
+            if not id:
+                break
+            name = row[1].value
+            username = row[2].value
+            password = row[3].value
+
+            xuedaos.append({
+                'name': name,
+                'username': username,
+                'password': password,
+                # 'tel': tel,
+                # 'short_intro': short_intro,
+                # 'intro': intro,
+                # 'zhuanye': zhuanye,
+                # 'banji': banji,
+            })
+
+        except:
+            print('<Xuedao {}l#> Xls format error'.format(i))
+            continue
+
+    def add(xuedao: dict):
+        import shutil
+        from account.models import UserInfo
+
+        xuedao.setdefault('reservee', True)
+        xuedao.setdefault('can_reserved', True)
+
+        name = xuedao.get('name', '')
+
+        u, created = User.objects.get_or_create(username=xuedao['username'])
+        if created:
+            u.name = xuedao.get('name', '')
+            u.tel = xuedao.get('tel', '')
+            u.set_password(xuedao.get('password', 'Test123'))
+            u.save()
+
+            ui = u.userinfo
+            user_info_fields = [x.name for x in UserInfo._meta.get_fields()]
+            for k, v in xuedao.items():
+                if k in user_info_fields:
+                    setattr(ui, k, v)
+            ui.save()
+
+        UserSettings().add_group(user_obj=u, id=2)  # reservee
+
+        # 头像处理 - 开始
+        avatar_source_path = os.path.join(BASE_DIR, 'init_data', 'secret', 'avatars')
+        avatar_path = os.path.join(BASE_DIR, 'media', 'avatars')
+
+        username = xuedao.get('username' '')
+        m_paths = ['jpg', 'jpeg', 'png']
+
+        for m in m_paths:
+            if os.path.isfile(os.path.join(avatar_source_path, '{}.{}'.format(username, m))):
+                shutil.copyfile(os.path.join(avatar_source_path, '{}.{}'.format(username, m)),
+                                os.path.join(avatar_path, '{}.{}'.format(username, m)))
+                u.avatar = "avatars/{}.{}".format(username, m)
+                u.save()
+                break
+        # 头像处理 - 结束
+        u.save()
+
+        return created
+
+    results = [add(x) for x in xuedaos]
+    for i, r in enumerate(results, 1):
+        print('{} - {}'.format(i, r))
+
+    print('Complete Init Xuedaos')
 
 
 @init_wp

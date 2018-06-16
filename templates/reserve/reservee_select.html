@@ -16,7 +16,7 @@
                     <div class="row box">
                         {% if reservee %}
                             {% for r in reservee %}
-                                <div class="col-xs-6 col-sm-4 item">
+                                <div class="col-xs-12 col-sm-4 item">
                                     <div class="contact-box">
                                         <form method="post" id="reservee_{{ r.id }}">
                                             <input type="hidden" name="reservee" value="{{ r.id }}">
@@ -26,7 +26,7 @@
                                                     <div class="text-center">
                                                         <img alt="image" class="img-circle m-t-xs img-responsive"
                                                              src="/media/{{ r.avatar }}"
-                                                             style="width: 80px; margin: auto;">
+                                                             style="width: 160px; margin: auto;">
                                                         <div class="m-t-xs font-bold">{{ r.userinfo.short_intro|linebreaks }}</div>
                                                     </div>
                                                 </div>

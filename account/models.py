@@ -14,7 +14,7 @@ class User(AbstractUser):
         (1, '男'),
         (2, '女'),
     )
-    name = models.CharField(max_length=50, verbose_name='姓名')
+    name = models.CharField(max_length=50, verbose_name='姓名', default='', blank=True)
     gender = models.IntegerField(verbose_name='性别', choices=GENDER_CHOICES, default=-1)
     tel = models.CharField(max_length=60, verbose_name='电话号码', default='', blank=True)
     id_card_no = models.CharField(max_length=80, verbose_name='身份证号', default='', blank=True)
@@ -53,8 +53,7 @@ class User(AbstractUser):
             try:
                 with Image.open(self.avatar.path) as im:
                     x, y = im.size
-                    size = (100, 100)
-                    im.thumbnail((120, 120 * y / x), resample=Image.LANCZOS)
+                    im.thumbnail((360, 360 * y / x), resample=Image.LANCZOS)
                     im.save(self.avatar.path)
             except OSError:
                 pass
@@ -97,9 +96,9 @@ class UserInfo(models.Model):
     )
     can_reserve_gender = models.IntegerField(verbose_name='可接受预约人性别', help_text='对于未定义性别的用户只有不限性别选项可被预约',
                                              choices=GENDER_CHOICES, default=0)
-    short_intro = models.TextField(verbose_name='简介（显示于头像下方）', null=True, blank=True, )
-    intro = models.TextField(verbose_name='介绍', null=True, blank=True, )
-    default_address = models.CharField(verbose_name='默认地点', null=True, blank=True, max_length=160)
+    short_intro = models.TextField(verbose_name='简介（显示于头像下方）', default='', blank=True)
+    intro = models.TextField(verbose_name='介绍', default='', blank=True)
+    default_address = models.CharField(verbose_name='默认地点', default='', blank=True, max_length=160)
     can_reserve_type = models.ManyToManyField('reserve.ReserveType', blank=True, verbose_name='可被预约种类')
 
     @property

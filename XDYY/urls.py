@@ -21,16 +21,16 @@ from django.urls import path, include
 from main.views import IndexView, RefreshView
 
 urlpatterns = [
-    path('', IndexView.as_view(), name='index'),
-    path('dashboard/', include('dashboard.urls', namespace='dashboard')),
-    path('account/', include('account.urls', namespace='account')),
-    path('reserve/', include('reserve.urls', namespace='reserve')),
+                  path('', IndexView.as_view(), name='index'),
+                  path('dashboard/', include('dashboard.urls', namespace='dashboard')),
+                  path('account/', include('account.urls', namespace='account')),
+                  path('reserve/', include('reserve.urls', namespace='reserve')),
                   path('wechat/', include('wechat.urls', namespace='wechat')),
 
-    path('admin/', admin.site.urls),
-    path('refresh/', RefreshView.as_view(), name='refresh'),
-    path('hijack/', include('hijack.urls', namespace='hijack')),
+                  path('admin/', admin.site.urls),
+                  path('refresh/', RefreshView.as_view(), name='refresh'),
+                  path('hijack/', include('hijack.urls', namespace='hijack')),
 
                   path('api/', include('api.urls')),
 
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
